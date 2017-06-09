@@ -1,7 +1,7 @@
 success 1
-invalid username 2 
-invalid password 3
-wrong password 4
+invalid phone 2 
+invalid licence 3
+invalid name 4
 this name is already exist in db 6
 database error 9
 invalid name please check it again. it mustn't include any punctuation. 5
@@ -9,11 +9,71 @@ invalid id 7
 invalid subpath 10
 
 "11"; //invalid name error 
-"12"; //invalid organizer error
-"13"; //invalid shortDescription error
-"14"; // invalid detailedDescription error
-"15"; // campaign not found
+"12"; //SMSKEY Successfully Sent
+"13"; //SMSKEY Sending Failed
+"14"; //Invalid SMSKEY
 "16"; //user already done this
 
 "17"; //access denied
 "18"; //file upload failed.
+
+  {
+"licence": "BVSKLW4FG",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da14"
+},
+  {
+"licence": "YJ75S4UL0",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da15"
+},
+  {
+"licence": "HKCTX4T03",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da16"
+},
+  {
+"licence": "WIS9WOTLP",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da17"
+},
+  {
+"licence": "RVC107KFO",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da18"
+},
+  {
+"licence": "CUYY5TJJC",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da19"
+},
+  {
+"licence": "41VYFG0OW",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da1a"
+},
+  {
+"licence": "SQ0OHMEZ4",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da1b"
+},
+  {
+"licence": "GE1MKATGM",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da1c"
+},
+  {
+"licence": "B7Y050U70",
+"used": false,
+"given": false,
+"_id": "593aec601fe9230e67b2da1d"
+}

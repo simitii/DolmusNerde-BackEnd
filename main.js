@@ -1,4 +1,3 @@
-var fs = require('fs');
 var http = require('http');
 var https = require('https');
 var express = require('express');
@@ -6,11 +5,10 @@ var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
-var FileUpload = require('./api/FileUpload');
 var DataLogger = require('./DataLogger');
 
 //logging usage statistics reqularly(per minute)
-require('./DataLogger').logUsageStatistics();
+DataLogger.logUsageStatistics();
 
 
 // import api route
@@ -36,12 +34,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // for parsing cookies
 app.use(cookieParser()); 
 
-// for parsing files
-app.use(function(req,res,next){
-	FileUpload(req,res,function(err){
-		next();
-	});
-});
 
 app.use(function(req,res,next){
 	DataLogger.logHttpCommunication(req.ip,'client',req.cookies,req.body,req.originalUrl,req.files);
@@ -58,10 +50,10 @@ app.use('/api/',api);
 
 //opening page
 app.use('/', function (req, res) {
-	res.send("opening page!");
+	res.send("Server is up!");
 });
 
-
+/*
 // import socket module which manages connection over WebSocket(socket.io) 
 var io = require('./api/Socket')(httpServer);
 if(io !== undefined && io !== null){
@@ -69,7 +61,7 @@ if(io !== undefined && io !== null){
 }else{
 	console.log("socket-io failed");
 }
-
+*/
 var port = process.env.PORT || 8080;
 
 // start servers

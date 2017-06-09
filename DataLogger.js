@@ -1,10 +1,7 @@
 var os = require("os");
-var fs = require("fs");
-var PATH = './logs/';
 
 
 exports.logHttpCommunication = function(ip,sender,cookie,message,url,files){
-	var filePath = PATH + 'HttpLogs';
 	var log = "================ HTTP Log ================\n";
 	log += "Date                      : " + new Date() + "\n";
 	log += "Sender                    : " + sender + "\n";
@@ -15,29 +12,10 @@ exports.logHttpCommunication = function(ip,sender,cookie,message,url,files){
 	log += "Files                     : " + JSON.stringify(files) + "\n";
 	log += "=============================================================" + "\n";
 	log += "\n";
-	fs.writeFile(filePath,log,{'flag':'a'},function(err){
-		console.log('Http Communication Logged!');
-	});
-};
-
-exports.logDataBaseInput = function(input){
-	var filePath = PATH + 'DataBaseInputLogs';
-	var data = JSON.stringify(res);
-	fs.writeFile(filePath,data,{'flag':'a'},function(err){
-		console.log('DataBase Input Logged!');
-	});
-};
-
-exports.logDataBaseOutput = function(output){
-	var filePath = PATH + 'DataBaseOutputLogs';
-	var data = JSON.stringify(res);
-	fs.writeFile(filePath,data,{'flag':'a'},function(err){
-		console.log('DataBase Output Logged!');
-	});
+	console.log(log);
 };
 
 exports.logSocketIOCommunition = function(ip,sender,on,data){
-	var filePath = PATH + 'SocketIOLogs';
 	var log = "================ Socket-IO Log ================\n";
 	log += "Date                      : " + new Date() + "\n";
 	log += "IP Address                : " + ip + "\n";
@@ -46,13 +24,10 @@ exports.logSocketIOCommunition = function(ip,sender,on,data){
 	log += "Data                      : " + JSON.stringify(data) + "\n";
 	log += "=============================================================" + "\n";
 	log += "\n";
-	fs.writeFile(filePath,log,{'flag':'a'},function(err){
-		console.log('Socket-IO Communication Logged!');
-	});
+	console.log(log);
 };
 
 exports.logUsageStatistics = function(){
-	var filePath = PATH + 'UsageStatistics';
 	var counter = 1;
 	setInterval(function(){
 		var totalmem = os.totalmem();
@@ -68,8 +43,6 @@ exports.logUsageStatistics = function(){
 		data += "NETWORK Usage             : %" + 0 + "\n";
 		data += "=============================================================" + "\n";
 		data += "\n";
-		fs.writeFile(filePath,data,{'flag':'a'},function(err){
-			console.log('Scheduled System Info Logged!');
-		});
+		console.log(data);
 	},60000);
 };

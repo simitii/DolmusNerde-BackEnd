@@ -39,17 +39,11 @@ module.exports=function(app){
       DataLogger.logSocketIOCommunition(ip,'client','connection','');
   		if(cookie != undefined && cookie != null){
   			newClient(cookie.username,socket);
-  			var aaa = 1;
-        /*
-  			setInterval(function(){
-  				socket.emit('message',{'_id':'1213z','text':'fuck off!','user':{'_id':'SAM','name':'sikici','avatar':'xx'},'toWhom':{'_id':'simitii','name':'sik','avatar':'xx'}});
-  			},3000)
-        */
-  			//sendSavedData(cookie.username,socket);
+        //CONNECTION SUCCEED
   		}else{
   			socket.disconnect();
         	DataLogger.logSocketIOCommunition(ip,'server','disconnect','Authentication Error');
-		}
+		  }
   		//handling socket removal from client list
   		socket.on('disconnect',function(){
         DataLogger.logSocketIOCommunition(ip,'client','disconnect','');
