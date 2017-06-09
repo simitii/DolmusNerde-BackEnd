@@ -1,0 +1,19 @@
+success 1
+invalid username 2 
+invalid password 3
+wrong password 4
+this name is already exist in db 6
+database error 9
+invalid name please check it again. it mustn't include any punctuation. 5
+invalid id 7
+invalid subpath 10
+
+"11"; //invalid name error 
+"12"; //invalid organizer error
+"13"; //invalid shortDescription error
+"14"; // invalid detailedDescription error
+"15"; // campaign not found
+"16"; //user already done this
+
+"17"; //access denied
+"18"; //file upload failed.
