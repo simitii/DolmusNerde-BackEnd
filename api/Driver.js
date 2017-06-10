@@ -224,11 +224,6 @@ exports.deleteLicence = function(db,req,res){
 };
 
 
-exports.pushPositionData = function(req,res,db){
-	//TODO  GET DATA FROM req.body and PUSH NOTIFICATION USING ONESIGNAL
-};
-
-
 /*
 var sendSmsKey = function(db,phone,callback){
 	var query = {};

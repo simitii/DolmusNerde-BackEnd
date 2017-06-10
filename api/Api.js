@@ -4,6 +4,7 @@ var driver = require('./Driver');
 var cookie = require('./Cookie');
 var Constants = require('./Constants');
 var admin = require('./Admin');
+var positionData = require('./PositionData');
 
 var dbConnect = function(callback){
 	db.connect(function(err){
@@ -17,7 +18,7 @@ var dbConnect = function(callback){
 			callback(false);
 		}
 	});
-}
+};
 
 dbConnect(function(success){
 	if(success){
@@ -34,12 +35,17 @@ router.use(function(req,res,next){
 	function isDBNeeded(path){
 		switch(path){
 			// DB_NEEDED
+				//POSITIONDATA MODULE
+			case '/pushPositionData':
+			case '/pullPositionData':
+				//ADMIN MODULE
 			case '/adminLogin':
 			case '/createNewAdminAccount':
 			case '/changeAdminPassword':
 			case '/deleteAdminAccount':
+				//DRIVER MODULE
 			case '/driverRegister': 
-			case '/driverDelete': 
+			case '/driverDelete':
 			case '/generateLicences':
 			case '/setLicenceStatusToGiven':
 			case '/setLicenceStatusToNotGiven':
@@ -49,7 +55,6 @@ router.use(function(req,res,next){
 				return true;
 			// DB_NOT_NEEDED
 			case '/logout':
-			case '/pushPositionData':
 				return false;
 
 			default : return false;
@@ -73,6 +78,7 @@ router.use(function(req,res,next){
 	function hasPermissionsNeeded(path,loginData){
 		switch(path){
 			// Permissions.NO_NEED
+			case '/pullPositionData':
 			case '/adminLogin':
 			case '/driverRegister':
 			case '/logout': 
@@ -108,6 +114,16 @@ router.use(function(req,res,next){
 });
 
 // split up route handling
+
+//=========POSITION-DATA======
+router.use('/pushPositionData',function(req,res){
+	positionData.pushPositionData(db,req,res);
+});
+
+router.use('/pullPositionData',function(req,res){
+	positionData.pullPositionData(db,req,res);
+});
+
 //=========USER-IN-GENERAL====
 router.use('/logout',function(req,res){
 	res.clearCookie("info");

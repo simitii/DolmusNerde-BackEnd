@@ -23,8 +23,6 @@ var api = require('./api/Api');
 var httpServer = http.createServer(app);
 //var httpsServer = https.createServer(credentials, app);
 
-// start socket-io
-//socket.start(httpServer);
 
 // for parsing application/json
 app.use(bodyParser.json()); 
@@ -53,15 +51,6 @@ app.use('/', function (req, res) {
 	res.send("Server is up!");
 });
 
-/*
-// import socket module which manages connection over WebSocket(socket.io) 
-var io = require('./api/Socket')(httpServer);
-if(io !== undefined && io !== null){
-	console.log("socket-io successfully started");
-}else{
-	console.log("socket-io failed");
-}
-*/
 var port = process.env.PORT || 8080;
 
 // start servers

@@ -57,6 +57,9 @@ exports.remove = function(collection,query,callback) {
 exports.update = function(collection,query,updates,callback){
     _db.collection(collection).update(query,updates,callback);
 };
+exports.updateWithOptions = function(collection,query,updates,options,callback){
+    _db.collection(collection).update(query,updates,options,callback);
+};
 exports.updateMany = function(collection,query,updates,callback){
     _db.collection(collection).updateMany(query,updates,callback);
 };
