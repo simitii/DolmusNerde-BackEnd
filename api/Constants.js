@@ -9,8 +9,14 @@ exports.Responses = {
 	'INVALID_PHONE' : '2',
 	'INVALID_LICENCE' : '3',
 	'INVALID_NAME' : '4',
+	'INVALID_INPUT': '5',
 	'DB_ERROR' : '9',
 	'INVALID_SUBPATH' : '10',
 	'THERE_IS_REGISTERED_DRIVER_TO_THE_LICENCE': '11',
 	'ACCESS_DENIED' : '17',
 };
+
+exports.Defaults = {
+	'ADMIN_USERNAME': 'admin',
+	'ADMIN_PASS': 'admin',
+}

@@ -1,4 +1,3 @@
-var ObjectId = require('mongodb').ObjectId;
 var cookie = require('./Cookie');
 var validate = require('./Validation');
 var phoneNOParser = require('libphonenumber-js').parse;
@@ -23,8 +22,11 @@ exports.register = function(db,req,res){
 		if(success){
 			db.insert('driver',driver,function(err){
 				if(err === null){
-					cookie.addToResponse(res,driver.phone,driver.name,driver.licence,
-						Constants.UserTypes.DRIVER);
+					var data = {
+						'name' : driver.name,
+						'licence': driver.licence,
+					}
+					cookie.addToResponse(res,driver.phone,data,Constants.UserTypes.DRIVER);
 					res.send(Constants.Responses.SUCCESS);
 					setLicenceStatusUsed(driver.licence);
 				}

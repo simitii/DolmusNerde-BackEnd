@@ -3,6 +3,7 @@ var db = require('./DataBase');
 var driver = require('./Driver');
 var cookie = require('./Cookie');
 var Constants = require('./Constants');
+var admin = require('./Admin');
 
 var dbConnect = function(callback){
 	db.connect(function(err){
@@ -18,7 +19,13 @@ var dbConnect = function(callback){
 	});
 }
 
-dbConnect(function(){});
+dbConnect(function(success){
+	if(success){
+		admin.init(db);
+	}else{
+		console.log("Initial Settings Failed Because DB Connection Failed!");
+	}
+});
 
 //MiddleWares
 
@@ -27,6 +34,10 @@ router.use(function(req,res,next){
 	function isDBNeeded(path){
 		switch(path){
 			// DB_NEEDED
+			case '/adminLogin':
+			case '/createNewAdminAccount':
+			case '/changeAdminPassword':
+			case '/deleteAdminAccount':
 			case '/driverRegister': 
 			case '/driverDelete': 
 			case '/generateLicences':
@@ -37,6 +48,7 @@ router.use(function(req,res,next){
 			case '/deleteLicence':
 				return true;
 			// DB_NOT_NEEDED
+			case '/logout':
 			case '/pushPositionData':
 				return false;
 
@@ -61,14 +73,19 @@ router.use(function(req,res,next){
 	function hasPermissionsNeeded(path,loginData){
 		switch(path){
 			// Permissions.NO_NEED
-			case '/driverRegister': 
+			case '/adminLogin':
+			case '/driverRegister':
+			case '/logout': 
 				return true;
 
 			// Permissions.DRIVER
 			case '/pushPositionData':
-				return loginData.usertype == Constants.UserTypes.DRIVER;
+				return loginData!=null && loginData.usertype == Constants.UserTypes.DRIVER;
 
 			// Permissions.ADMIN
+			case '/createNewAdminAccount':
+			case '/changeAdminPassword':
+			case '/deleteAdminAccount':
 			case '/driverDelete': 
 			case '/generateLicences':
 			case '/setLicenceStatusToGiven':
@@ -76,7 +93,7 @@ router.use(function(req,res,next){
 			case '/getNotGivenLicences':
 			case '/getLicenceUsage':
 			case '/deleteLicence':
-				return loginData.usertype == Constants.UserTypes.ADMIN;
+				return loginData!=null && loginData.usertype == Constants.UserTypes.ADMIN;
 
 			default : return true;
 		}
@@ -91,6 +108,26 @@ router.use(function(req,res,next){
 });
 
 // split up route handling
+//=========USER-IN-GENERAL====
+router.use('/logout',function(req,res){
+	res.clearCookie("info");
+	res.send(Constants.Responses.SUCCESS);
+});
+
+//=========ADMIN==============
+router.use('/createNewAdminAccount',function(req,res){
+	admin.createNewAdminAccount(db,req,res);
+});
+
+router.use('/adminLogin',function(req,res){
+	admin.login(db,req,res);
+});
+router.use('/changeAdminPassword',function(req,res){
+	admin.changeAdminPassword(db,req,res);
+});
+router.use('/deleteAdminAccount',function(req,res){
+	admin.deleteAdminAccount(db,req,res);
+});
 
 //=========DRIVER=============
 

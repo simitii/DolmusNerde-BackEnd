@@ -47,22 +47,25 @@ exports.findWithPreferences = function(collection,query,preferences,callback){
 };
 exports.find = function(collection,query,callback){
     _db.collection(collection).find(query).toArray(callback);
-  };
+};
 exports.limittedFind = function(collection,query,limit,callback){
     _db.collection(collection).find(query).limit(limit).toArray(callback);
-  };
+};
 exports.remove = function(collection,query,callback) {
     _db.collection(collection).remove(query,callback);
-  };
+};
 exports.update = function(collection,query,updates,callback){
     _db.collection(collection).update(query,updates,callback);
-  };
+};
 exports.updateMany = function(collection,query,updates,callback){
     _db.collection(collection).updateMany(query,updates,callback);
 };
 exports.findOneAndUpdate = function(collection,query,updates,callback){
     _db.collection(collection).findOneAndUpdate(query,updates,callback);
-  };
+};
 exports.findOneAndDelete = function(collection,query,callback) {
     _db.collection(collection).findOneAndDelete(query,callback);
-  };
+};
+exports.ensureIndex = function(collection,index,options){
+    _db.collection(collection).ensureIndex(index,options);
+}

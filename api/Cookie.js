@@ -43,57 +43,62 @@ function decipher(encryptedData,key){
  * returns null
  */
 exports.verifyAndGetData = function(cookie){
-	if(cookie === undefined){
+	console.log(cookie);
+	if(cookie == undefined || cookie.key==undefined || cookie.data==undefined || cookie.hash==undefined){
 		return null;
 	}
 	//getting info located in cookie
-	var phone = cookie.phone;
+	var key = cookie.key;
 	var encryptedData = cookie.data;
 	var hash = cookie.hash;  
  	var object = {};
- 	object['phone'] = phone;
- 	var key = hmac(object,serverKey);
- 	var data = decipher(encryptedData,key);
+ 	object['key'] = key;
+ 	var tempKey = hmac(object,serverKey);
+ 	console.log(tempKey);
+ 	var data = decipher(encryptedData,tempKey);
  	object = {};
- 	object['phone'] = phone;
+ 	object['key'] = key;
  	object['data'] = data;
  	object['serverKey'] = serverKey;
- 	var verificationCode = hmac(object,key);
+ 	var verificationCode = hmac(object,tempKey);
  	if(verificationCode !== hash){
  		return null;
  	}
- 	data['phone'] = phone;
+ 	data['key'] = key;
  	return data;
 }
 function create(info){
-	var phone = info.phone;
+	var key = info.key;
 	//30 days expiration time
 	var data = info.data;
 	var object = {};
-	object['phone'] = phone;
-	var key = hmac(object,serverKey);
-	var encryptedData = cipher(data,key);
+	object['key'] = key;
+	var tempKey = hmac(object,serverKey);
+	console.log("tempKey = " + tempKey);
+	var encryptedData = cipher(data,tempKey);
 	object = {};
-	object['phone'] = phone;
+	object['key'] = key;
 	object['data'] = data;
 	object['serverKey'] = serverKey;
-	var hash = hmac(object,key);
+	var hash = hmac(object,tempKey);
 	var cookie = {};
-	cookie['phone'] = phone;
+	cookie['key'] = key;
 	cookie['data'] = encryptedData;
 	cookie['hash'] = hash;
 	return cookie;
 }
 
-exports.addToResponse = function(res,phone,name,licence,usertype){
-	var data = {};
+exports.addToResponse = function(res,key,data,usertype){
+	if(data === null || typeof yourVariable !== 'object'){
+		data = {};
+	}
 	data['login'] = true;
-	data['licence'] = licence;
-	data['name'] = name;
 	data['usertype'] = usertype;
 	var info = {};
-	info['phone'] = phone;
+	info['key'] = key;
 	info['data'] = data;
+	console.log(info);
+	console.log(data);
 	var newCookie = create(info);
 	var cookieOptions = {};
 	res.cookie('info',newCookie,cookieOptions);
