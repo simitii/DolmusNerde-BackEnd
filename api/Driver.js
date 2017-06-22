@@ -9,32 +9,33 @@ exports.register = function(db,req,res){
 	driver.name = req.body.name;
 	driver.phone = req.body.phone;
 	driver.licence = req.body.licence;
-	if(!validate.phone(driver.phone)){
-		res.send(Constants.Responses.INVALID_PHONE);
-		return;
-	}
-	driver.phone = phoneNOParser(driver.phone).phone;
 	if(!validate.name(driver.name)){
 		res.send(Constants.Responses.INVALID_NAME); 
 		return;
 	}
-	validate.licence(driver.licence,db,function(success){
-		if(success){
-			db.insert('driver',driver,function(err){
-				if(err === null){
-					var data = {
-						'name' : driver.name,
-						'licence': driver.licence,
-					}
-					cookie.addToResponse(res,driver.phone,data,Constants.UserTypes.DRIVER);
-					res.send(Constants.Responses.SUCCESS);
-					setLicenceStatusUsed(driver.licence);
+	validate.phone(db,driver.phone,function(suc){
+		if(suc){
+			validate.licence(driver.licence,db,function(success){
+				if(success){
+					db.insert('driver',driver,function(err){
+						if(err === null){
+							var data = {
+								'name' : driver.name,
+								'licence': driver.licence,
+							}
+							cookie.addToResponse(res,driver.phone,data,Constants.UserTypes.DRIVER);
+							res.send(Constants.Responses.SUCCESS);
+							setLicenceStatusUsed(driver.licence);
+						}
+						else
+							res.send(Constants.Responses.DB_ERROR);
+					});
+				}else{
+					res.send(Constants.Responses.INVALID_LICENCE);
 				}
-				else
-					res.send(Constants.Responses.DB_ERROR);
 			});
 		}else{
-			res.send(Constants.Responses.INVALID_LICENCE);
+			res.send(Constants.Responses.INVALID_PHONE);
 		}
 	});
 	function setLicenceStatusUsed(licence){
@@ -159,7 +160,7 @@ exports.setLicenceStatusToNotGiven = function(db,req,res){
 };
 
 exports.getNotGivenLicences = function(db,req,res){
-	db.find('licence',{given:false},function(err,docs){
+	db.find('licence',{given:false,used:false},function(err,docs){
 		if(err!=null){
 			res.send(Constants.Responses.DB_ERROR);
 		}else{

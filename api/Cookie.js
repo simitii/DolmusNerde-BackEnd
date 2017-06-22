@@ -49,15 +49,25 @@ exports.verifyAndGetData = function(cookie){
 	}
 	//getting info located in cookie
 	var key = cookie.key;
+	var expires = cookie.expires;
 	var encryptedData = cookie.data;
-	var hash = cookie.hash;  
+	var hash = cookie.hash;
+
+	//check if cookie is expired
+ 	if(Date.now() > cookie.extime){
+ 		return null;
+ 	}
+
  	var object = {};
  	object['key'] = key;
+ 	object['expires'] = expires;
  	var tempKey = hmac(object,serverKey);
+ 	console.log("EX " + expires);
  	console.log(tempKey);
  	var data = decipher(encryptedData,tempKey);
  	object = {};
  	object['key'] = key;
+ 	object['expires'] = expires;
  	object['data'] = data;
  	object['serverKey'] = serverKey;
  	var verificationCode = hmac(object,tempKey);
@@ -69,20 +79,23 @@ exports.verifyAndGetData = function(cookie){
 }
 function create(info){
 	var key = info.key;
-	//30 days expiration time
+	//EXPIRES Approximately Fri, 31 Dec 9999 23:59:59 GMT
+	var expires = new Date(253402300000000);
 	var data = info.data;
 	var object = {};
 	object['key'] = key;
+	object['expires'] = expires;
 	var tempKey = hmac(object,serverKey);
-	console.log("tempKey = " + tempKey);
 	var encryptedData = cipher(data,tempKey);
 	object = {};
 	object['key'] = key;
+	object['expires'] = expires;
 	object['data'] = data;
 	object['serverKey'] = serverKey;
 	var hash = hmac(object,tempKey);
 	var cookie = {};
 	cookie['key'] = key;
+	cookie['expires'] = expires;
 	cookie['data'] = encryptedData;
 	cookie['hash'] = hash;
 	return cookie;
@@ -101,6 +114,7 @@ exports.addToResponse = function(res,key,data,usertype){
 	console.log(data);
 	var newCookie = create(info);
 	var cookieOptions = {};
+	cookieOptions['expires'] = newCookie.expires;
 	res.cookie('info',newCookie,cookieOptions);
 	res.cookieSended = {};
 	res.cookieSended.info = newCookie;

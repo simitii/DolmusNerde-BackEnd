@@ -5,6 +5,7 @@ var cookie = require('./Cookie');
 var Constants = require('./Constants');
 var admin = require('./Admin');
 var positionData = require('./PositionData');
+var contact = require('./Contact');
 
 var dbConnect = function(callback){
 	db.connect(function(err){
@@ -55,6 +56,9 @@ router.use(function(req,res,next){
 				return true;
 			// DB_NOT_NEEDED
 			case '/logout':
+				//CONTACT MODULE
+			case '/errorReport':
+			case '/tellUs':
 				return false;
 
 			default : return false;
@@ -82,10 +86,13 @@ router.use(function(req,res,next){
 			case '/adminLogin':
 			case '/driverRegister':
 			case '/logout': 
+			case '/errorReport':
+			case '/tellUs':
 				return true;
 
 			// Permissions.DRIVER
 			case '/pushPositionData':
+			case '/hasLogedIn':
 				return loginData!=null && loginData.usertype == Constants.UserTypes.DRIVER;
 
 			// Permissions.ADMIN
@@ -153,6 +160,9 @@ router.use('/driverRegister', function(req,res){
 router.use('/driverDelete', function(req,res){
 	driver.delete(db,req,res);
 });
+router.use('/hasLogedIn',function(req,res){
+	res.send(Constants.Responses.SUCCESS);
+});
 
 //=========LICENCE===========
 router.use('/generateLicences',function(req,res){
@@ -178,6 +188,13 @@ router.use('/pushPositionData',function(req,res){
 	driver.pushPositionData(db,req,res);
 });
 
+//==========CONTACT=========
+router.use('/errorReport',function(req,res){
+	contact.errorReport(req,res);
+});
+router.use('/tellUs',function(req,res){
+	contact.tellUs(req,res);
+});
 
 //========INVALID_SUBPATH======
 router.use('/',function(req,res){

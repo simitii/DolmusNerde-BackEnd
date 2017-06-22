@@ -1,6 +1,19 @@
 var isValidNumber = require('libphonenumber-js').isValidNumber;
-exports.phone = function(phone){ 
-  	return phone!=undefined && isValidNumber(phone,'TR');
+var phoneNOParser = require('libphonenumber-js').parse;
+
+exports.phone = function(db,phone,callback){ 
+	if(phone==undefined || !isValidNumber(phone,'TR')){
+		callback(false);
+	}else{
+		phone = phoneNOParser(phone,"TR").phone;
+		db.find('driver',{'phone':phone},function(err,docs){
+			if(err === null && docs.length == 0){
+				callback(true);
+			}else{
+				callback(false);
+			}
+		});
+	}
 };
 
 exports.name = function(name){

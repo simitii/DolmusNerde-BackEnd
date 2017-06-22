@@ -34,10 +34,10 @@ app.use(cookieParser());
 
 
 app.use(function(req,res,next){
-	DataLogger.logHttpCommunication(req.ip,'client',req.cookies,req.body,req.originalUrl,req.files);
+	DataLogger.logHttpCommunication(req.headers['x-real-ip'],'client',req.cookies,req.body,req.originalUrl,req.files);
 	res.sendResponse = res.send;
 	res.send = function(response){
-		DataLogger.logHttpCommunication(req.ip,'server',res.cookieSended,response,req.originalUrl,undefined);
+		DataLogger.logHttpCommunication(req.headers['x-real-ip'],'server',res.cookieSended,response,req.originalUrl,undefined);
 		res.sendResponse(response);
 	};
 	next();

@@ -52,31 +52,38 @@ var updatePositionData = function(db,data){
  *         }
  */
 exports.pushPositionData = function(db,req,res){
-  if(req.body.data==undefined || req.body.data==null || 
-    req.body.data.minibusLine==undefined || req.body.data.minibusLine==null ||
-    req.body.data.licencePlate==undefined || req.body.licencePlate==null){
-      
-      res.send(Constants.Response.INVALID_INPUT);
+  if(req.body.minibusLine==undefined || req.body.minibusLine==null ||
+    req.body.licencePlate==undefined || req.body.licencePlate==null ||
+    req.body.index==undefined || req.body.index==null){
+      res.send(Constants.Responses.INVALID_INPUT);
       return;
+  }
+  var data = {
+    'index': req.body.index,
+    'minibusLine': req.body.minibusLine,
+    'licencePlate': req.body.licencePlate,
+    'latitude': req.body.latitude,
+    'longitude': req.body.longitude,
+    'speed': req.body.speed
   }
 
   //PREPARE AND SEND MESSAGE(NOTIFICATION) USING ONESIGNAL
   var message = { 
     app_id: "64478bcd-cc2a-47dc-8ec5-c87c00701b4a",
-    contents: {"en": "DO NOT SHOW THIS"},
-    filters: [
-        {"field": "tag", "key": "MinibusLine", "relation": "=", "value": req.body.data.minibusLine},
-        {"operator": "OR"},
-        {"field": "tag", "key": "MinibusLine2", "relation": "=", "value": req.body.data.minibusLine},
-        {"operator": "OR"},
-        {"field": "tag", "key": "MinibusLine3", "relation": "=", "value": req.body.data.minibusLine},
-    ],
+    contents: {"en": "data"},
     content_available: true,
-    data: req.body.data
+    filters: [
+        {"field": "tag", "key": "MinibusLine", "relation": "=", "value": data.minibusLine},
+        {"operator": "OR"},
+        {"field": "tag", "key": "MinibusLine2", "relation": "=", "value": data.minibusLine},
+        {"operator": "OR"},
+        {"field": "tag", "key": "MinibusLine3", "relation": "=", "value": data.minibusLine},
+    ],
+    data: data
   };
   sendNotification(message);
-  updatePositionData(db,data);
-  res.send(Constants.Response.SUCCESS);
+  //updatePositionData(db,data);
+  res.send(Constants.Responses.SUCCESS);
 };
 
 exports.pullPositionData = function(db,req,res){
@@ -87,9 +94,9 @@ exports.pullPositionData = function(db,req,res){
   db.find('PositionData',{'minibusLine':req.body.minibusLine},function(err,docs){
     if(err!=null){
       console.log(err);
-      res.send(Constants.Response.DB_ERROR);
+      res.send(Constants.Responses.DB_ERROR);
     }else if(docs.length<1){
-      res.send(Constants.Response.NO_ACTIVE_MINIBUS);
+      res.send(Constants.Responses.NO_ACTIVE_MINIBUS);
     }else{
       res.send(docs);
     }

@@ -15,9 +15,12 @@ exports.Responses = {
 	'DB_ERROR' : '9',
 	'INVALID_SUBPATH' : '10',
 	'ACCESS_DENIED' : '17',
+	'MAIL_SERVER_ERROR': '19',
 };
 
 exports.Defaults = {
 	'ADMIN_USERNAME': 'admin',
 	'ADMIN_PASS': 'admin',
 }
+
+exports.AdminEmails = ["kaandura@gmail.com","400180sd@gmail.com"];
