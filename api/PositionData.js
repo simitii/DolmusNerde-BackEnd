@@ -1,5 +1,8 @@
 var Constants = require('./Constants');
 
+var newMinibusLine = require('./MinibusLine').newMinibusLine;
+var MemoryData = {};
+
 var sendNotification = function(data) {
   var headers = {
     "Content-Type": "application/json; charset=utf-8",
@@ -31,14 +34,20 @@ var sendNotification = function(data) {
   req.end();
 };
 
-var updatePositionData = function(db,data){
-  db.updateWithOptions('PositionData',{'licencePlate':data.licencePlate},
-                          {$set:data},{upsert:true},
-    function(err,r){
-      if(err!=null){
-        console.log(err);
+var updatePositionData = function(data){
+  if(MemoryData[data.minibusLine] == undefined){
+    //NEW MINIBUSLINE NEEDED
+    MemoryData[data.minibusLine] = newMinibusLine(data.minibusLine);
+    var garbageTimeInterval = setInterval(function(){
+      var isEmpty = MemoryData[data.minibusLine].garbageCollector();
+      if(isEmpty){
+        clearInterval(garbageTimeInterval);
+        delete MemoryData[data.minibusLine];
       }
-  });
+      console.log("GARBAGES COLLECTED!");
+    },Constants.Defaults.GARBAGE_INTERVAL);
+  }
+  MemoryData[data.minibusLine].newPositionData(data);
 };
 
 /** GETS DATA FROM req.body and PUSH NOTIFICATION USING ONESIGNAL
@@ -82,23 +91,19 @@ exports.pushPositionData = function(db,req,res){
     data: data
   };
   sendNotification(message);
-  //updatePositionData(db,data);
+  updatePositionData(data);
   res.send(Constants.Responses.SUCCESS);
 };
 
 exports.pullPositionData = function(db,req,res){
   if(req.body.minibusLine==undefined || req.body.minibusLine==null){
-      res.send(Constants.Response.INVALID_INPUT);
+      res.send(Constants.Responses.INVALID_INPUT);
       return;
   }
-  db.find('PositionData',{'minibusLine':req.body.minibusLine},function(err,docs){
-    if(err!=null){
-      console.log(err);
-      res.send(Constants.Responses.DB_ERROR);
-    }else if(docs.length<1){
-      res.send(Constants.Responses.NO_ACTIVE_MINIBUS);
-    }else{
-      res.send(docs);
-    }
-  });
+  var minibusLine = req.body.minibusLine;
+  if(MemoryData[minibusLine] == undefined || MemoryData[minibusLine].isEmpty()){
+    res.send(Constants.Responses.NO_ACTIVE_MINIBUS);
+  }else{
+    res.send(MemoryData[minibusLine].getActiveMinibuses());
+  }
 };

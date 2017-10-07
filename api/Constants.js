@@ -21,6 +21,8 @@ exports.Responses = {
 exports.Defaults = {
 	'ADMIN_USERNAME': 'admin',
 	'ADMIN_PASS': 'admin',
+	'DEAD_LIMIT': 100000, // 100 seconds = 1min 40sec
+	'GARBAGE_INTERVAL': 120000 // 120 seconds = 2min
 }
 
 exports.AdminEmails = ["kaandura@gmail.com","400180sd@gmail.com"];

@@ -1,7 +1,7 @@
 var crypto = require("crypto");
 
 //setting key
-var serverKey = '1#Hello World, I am The Fucker!#2';
+var serverKey = '$2B+f8VGumW&DhF3_3&kve=4Q*V@f!+k6BGbS-X2WmFzJdzMf?QRjmHc5pPMfcu8';
 
 
 function hmac(data, key){
@@ -43,7 +43,7 @@ function decipher(encryptedData,key){
  * returns null
  */
 exports.verifyAndGetData = function(cookie){
-	console.log(cookie);
+	//console.log(cookie);
 	if(cookie == undefined || cookie.key==undefined || cookie.data==undefined || cookie.hash==undefined){
 		return null;
 	}
@@ -62,8 +62,8 @@ exports.verifyAndGetData = function(cookie){
  	object['key'] = key;
  	object['expires'] = expires;
  	var tempKey = hmac(object,serverKey);
- 	console.log("EX " + expires);
- 	console.log(tempKey);
+ 	//console.log("EX " + expires);
+ 	//console.log(tempKey);
  	var data = decipher(encryptedData,tempKey);
  	object = {};
  	object['key'] = key;
@@ -110,8 +110,8 @@ exports.addToResponse = function(res,key,data,usertype){
 	var info = {};
 	info['key'] = key;
 	info['data'] = data;
-	console.log(info);
-	console.log(data);
+	//console.log(info);
+	//console.log(data);
 	var newCookie = create(info);
 	var cookieOptions = {};
 	cookieOptions['expires'] = newCookie.expires;

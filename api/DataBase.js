@@ -1,7 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 
 // Connection URL
-var url = 'mongodb://localhost:27017/test';
+var url = 'mongodb://localhost:27017/MinibusNerde';
 
 var _db = null;
 // Use connect method to connect to the server

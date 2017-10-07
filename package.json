@@ -7,7 +7,7 @@
     "start": "node main.js"
   },
   "author": "simitii",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",

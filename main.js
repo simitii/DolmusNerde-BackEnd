@@ -43,6 +43,7 @@ app.use(function(req,res,next){
 	next();
 });
 
+
 // api route
 app.use('/api/',api);
 
@@ -51,11 +52,11 @@ app.use('/', function (req, res) {
 	res.send("Server is up!");
 });
 
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 
 // start servers
 httpServer.listen(port,function(){
-	console.log('HTTP SERVER listening on port 8080!');
+	console.log('HTTP SERVER listening on port ' + port);
 }); 
 
 /*

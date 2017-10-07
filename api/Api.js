@@ -36,9 +36,6 @@ router.use(function(req,res,next){
 	function isDBNeeded(path){
 		switch(path){
 			// DB_NEEDED
-				//POSITIONDATA MODULE
-			case '/pushPositionData':
-			case '/pullPositionData':
 				//ADMIN MODULE
 			case '/adminLogin':
 			case '/createNewAdminAccount':
@@ -56,6 +53,9 @@ router.use(function(req,res,next){
 				return true;
 			// DB_NOT_NEEDED
 			case '/logout':
+				//POSITIONDATA MODULE
+			case '/pushPositionData':
+			case '/pullPositionData':
 				//CONTACT MODULE
 			case '/errorReport':
 			case '/tellUs':

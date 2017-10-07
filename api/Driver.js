@@ -17,6 +17,7 @@ exports.register = function(db,req,res){
 		if(suc){
 			validate.licence(driver.licence,db,function(success){
 				if(success){
+					driver.phone = phoneNOParser(driver.phone,"TR").phone;
 					db.insert('driver',driver,function(err){
 						if(err === null){
 							var data = {
@@ -188,6 +189,7 @@ exports.getLicenceUsage = function(db,req,res){
 						'DriverPhone':phoneNOFormat(doc.phone,'TR','International')
 					};
 				});
+				res.send(docs);
 			}
 		});
 	}
